@@ -1,39 +1,42 @@
 
-let svgWidth = 960;
-let svgHeight = 620;
+
+var svgWidth = 960;
+var svgHeight = 620;
 
 
-let margin = {
+var margin = {
   top: 20, 
   right: 40, 
   bottom: 200,
   left: 100
 };
 
-let width = svgWidth - margin.right - margin.left;
-let height = svgHeight - margin.top - margin.bottom;
+var width = svgWidth - margin.right - margin.left;
+var height = svgHeight - margin.top - margin.bottom;
 
-
-let chart = d3.select('#scatter')
+//  adding  div for scatter plot
+var chart = d3.select('#scatter')
   .append('div')
   .classed('chart', true);
 
-
-let svg = chart.append('svg')
+// adding svg to chart on html 
+var svg = chart.append('svg')
   .attr('width', svgWidth)
   .attr('height', svgHeight);
 
 
-let chartGroup = svg.append('g')
+var chartGroup = svg.append('g')
   .attr('transform', `translate(${margin.left}, ${margin.top})`);
 
+//  default  axis to show
+var chosenXAxis = 'ThreePointersPercentage';
+var chosenYAxis = 'Wins';
 
-let chosenXAxis = 'ThreePointersPercentage';
-let chosenYAxis = 'Wins';
 
+// updates max and min for x and y axis, value by .08 and 1.2
 function xScale(ballData, chosenXAxis) {
 
-    let xLinearScale = d3.scaleLinear()
+    var xLinearScale = d3.scaleLinear()
       .domain([d3.min(ballData, d => d[chosenXAxis]) * 0.8,
         d3.max(ballData, d => d[chosenXAxis]) * 1.2])
       .range([0, width]);
@@ -43,16 +46,16 @@ function xScale(ballData, chosenXAxis) {
 
 function yScale(ballData, chosenYAxis) {
 
-  let yLinearScale = d3.scaleLinear()
+  var yLinearScale = d3.scaleLinear()
     .domain([d3.min(ballData, d => d[chosenYAxis]) * 0.8,
       d3.max(ballData, d => d[chosenYAxis]) * 1.2])
     .range([height, 0]);
 
   return yLinearScale;
 }
-
+// updates scales transition speed
 function showXaxis(newXScale, xAxis) {
-  let bottomAxis = d3.axisBottom(newXScale);
+  var bottomAxis = d3.axisBottom(newXScale);
 
   xAxis.transition()
     .duration(2000)
@@ -71,7 +74,7 @@ function showYaxis(newYScale, yAxis) {
   return yAxis;
 }
 
-// circles
+// updates circles  and text 
 function createcircles(circlesGroup, newXScale, chosenXAxis, newYScale, chosenYAxis) {
 
     circlesGroup.transition()
@@ -92,7 +95,7 @@ function showtext(textGroup, newXScale, chosenXAxis, newYScale, chosenYAxis) {
 
     return textGroup
 }
-// tooltip
+// tooltip text 
 function styleX(value, chosenXAxis) {
 
     if (chosenXAxis === 'ThreePointersPercentage') {
@@ -107,7 +110,7 @@ function styleX(value, chosenXAxis) {
     }
 }
 
-
+// update
 function tooltipUpdata(chosenXAxis, chosenYAxis, circlesGroup) {
 
 
@@ -134,10 +137,10 @@ function tooltipUpdata(chosenXAxis, chosenYAxis, circlesGroup) {
     var yLabel = 'Losses:';
   }
 
-
+// popup text position
   var toolTip = d3.tip()
     .attr('class', 'd3-tip')
-    .offset([-8, 0])
+    .offset([-10, 0])
     .html(function(d) {
         return (`${d.Name}<br>${xLabel} ${styleX(d[chosenXAxis], chosenXAxis)}<br>${yLabel} ${d[chosenYAxis]}`);
   });
@@ -150,11 +153,12 @@ function tooltipUpdata(chosenXAxis, chosenYAxis, circlesGroup) {
     return circlesGroup;
 }
 
+// pulling data and mapping 
 d3.csv('./assets/data/result.csv').then(function(ballData) {
 
     console.log(ballData);
     
-
+// parse data to intergers
     ballData.forEach(function(data){
         data.Possessions = +data.Possessions;
         data.TwoPointersPercentage = +data.TwoPointersPercentage;
@@ -164,7 +168,7 @@ d3.csv('./assets/data/result.csv').then(function(ballData) {
         data.ThreePointersPercentage = +data.ThreePointersPercentage;
     });
 
-
+// create scale 
     var xLinearScale = xScale(ballData, chosenXAxis);
     var yLinearScale = yScale(ballData, chosenYAxis);
 
@@ -172,19 +176,19 @@ d3.csv('./assets/data/result.csv').then(function(ballData) {
     var bottomAxis = d3.axisBottom(xLinearScale);
     var leftAxis = d3.axisLeft(yLinearScale);
 
-
+// displaying x and y axis on html
     var xAxis = chartGroup.append('g')
       .classed('x-axis', true)
       .attr('transform', `translate(0, ${height})`)
       .call(bottomAxis);
 
-
+// 
     var yAxis = chartGroup.append('g')
       .classed('y-axis', true)
 
       .call(leftAxis);
     
-
+//  adding cirles to html 
     var circlesGroup = chartGroup.selectAll('circle')
       .data(ballData)
       .enter()
@@ -195,6 +199,7 @@ d3.csv('./assets/data/result.csv').then(function(ballData) {
       .attr('r', 18)
       .attr('opacity', '.5');
 
+// adds text in circles 
     var textGroup = chartGroup.selectAll('.teamtext')
       .data(ballData)
       .enter()
@@ -210,6 +215,7 @@ d3.csv('./assets/data/result.csv').then(function(ballData) {
     var xLabelsGroup = chartGroup.append('g')
       .attr('transform', `translate(${width / 2}, ${height + 10 + margin.top})`);
 
+    // adds data point labels for user on html page
     var threepointLabel = xLabelsGroup.append('text')
       .classed('aText', true)
       .classed('active', true)
@@ -267,9 +273,10 @@ d3.csv('./assets/data/result.csv').then(function(ballData) {
       .attr('value', 'Possessions')
       .text('Possession');
     
-
+// updates tooltip
     var circlesGroup = tooltipUpdata(chosenXAxis, chosenYAxis, circlesGroup);
 
+// x axis click lisener
     xLabelsGroup.selectAll('text')
       .on('click', function() {
         var value = d3.select(this).attr('value');
@@ -279,10 +286,11 @@ d3.csv('./assets/data/result.csv').then(function(ballData) {
 
           chosenXAxis = value; 
 
-
+          // updates on on click
           xLinearScale = xScale(ballData, chosenXAxis);
 
           xAxis = showXaxis(xLinearScale, xAxis);
+
           circlesGroup = createcircles(circlesGroup, xLinearScale, chosenXAxis, yLinearScale, chosenYAxis);
 
           textGroup = showtext(textGroup, xLinearScale, chosenXAxis, yLinearScale, chosenYAxis);
@@ -308,6 +316,7 @@ d3.csv('./assets/data/result.csv').then(function(ballData) {
         }
       });
 
+      // y axis click lisener 
     yLabelsGroup.selectAll('text')
       .on('click', function() {
         var value = d3.select(this).attr('value');
@@ -315,6 +324,8 @@ d3.csv('./assets/data/result.csv').then(function(ballData) {
         if(value !=chosenYAxis) {
 
             chosenYAxis = value;
+
+            // updates on click
             yLinearScale = yScale(ballData, chosenYAxis);
             yAxis = showYaxis(yLinearScale, yAxis);
             circlesGroup = createcircles(circlesGroup, xLinearScale, chosenXAxis, yLinearScale, chosenYAxis);
