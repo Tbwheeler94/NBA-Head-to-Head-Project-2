@@ -8,7 +8,7 @@ class SportsDataRepository(object):
 
     def __init__(self, conn_str=conn_str):
         self.client = pymongo.MongoClient(conn_str)
-        self.db = self.client.nbaDB
+        self.db = self.client['heroku_28fml3dl']
 
     def insert_team_seasons(self, data, year):
         self.db.team_seasons.update_one(
