@@ -24,3 +24,6 @@ hs_err_pid*
 
 # google drive
 *.ini
+
+*.idea
+__pycache__
