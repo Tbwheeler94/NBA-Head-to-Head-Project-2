@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+		<title>Smoothed D3.js Radar Chart</title>
+
+		<!-- Google fonts -->
+		<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300' rel='stylesheet' type='text/css'>
+		<link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
+
+		<!-- D3.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.2.3/d3.min.js"></script>
+    
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/superhero/bootstrap.min.css">
+
+    <!-- CSS -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" type="text/css" href="css/radarStyle.css">	
+  </head>
+    
+<!-- Nav Bar -->
+<nav style="background-color: #e2eef8;">
+  <ul class= "navbar-nav">
+    <li><a href="#"><img src="css/images/ball2.jpg" alt="ball" width="20" height="20"/>NBA Player Comparison from the last 10 years</a></li>
+    <li><a href="#"><img src="css/images/ball2.jpg" alt="ball" width="20" height="20"/>Transform Scatter Plot Chart 2019</a></li>
+    <li><a href="#"><img src="css/images/ball2.jpg" alt="ball" width="20" height="20"/><span>Head to Head Radar Chart 2019</span></a></a></li>
+  </ul>
+  <div class="container-fluid" style = "text-align: center;">
+    <div>    
+      <a class="navbar-brand" href="#"><img src="css/images/NBA_logo.png" alt="NBA" width="100" height="50" style="margin:40px -1230px;"></a>
+    </div>
+    <br>
+    <h1>
+        Head to Head Comparison
+    </h1>
+  </div>
+  </div>
+</nav>
+
+<!-- Player 1 Filter -->
+	<body>
+        <div class="col-md-2">
+            <aside class="filters">
+              <div class="panel panel-default">
+                <div class="panel-heading-1">
+                  <strong>Player 1</strong>
+                  </div>
+                <div class="panel-body">
+                  <form id="form-1">
+                    <div class="form-group">
+                      <ul class="list-group" id="filters">
+                        <li class="filter list-group-item">
+                          <label for="date">Enter a Player Name</label>
+                          <input class="form-control" id="player1name" type="text" placeholder="Player 1">
+                        </li>
+                      </ul>
+                    </div>
+                  </form>
+                </div>
+              </div>
+
+              <!-- Player 1 Details -->
+              <div class="panel">
+                <div class="player-heading">
+                  <strong>Profile</strong>
+                  </div>
+                <div class="player-body loader">
+                </div>
+             </aside>
+            </aside>
+          </div>
+
+<!-- Radar Chart Display -->
+
+    <div class="col-md-8">
+      <div class = "compare-button">
+        <button id="filter-btn-1" type="button" class="btn btn-default fire">Click to Compare</button>
+      </div>
+      <div class="radarChart"></div>
+    </div>
+
+<!-- In-Line Javascript -->
+<script>
+        
+/////////////////////////////////////////////////////////////
+////////// Create Area to Append SVG Elements //////////////// 
+/////////////////////////////////////////////////////////////
+var margin = {top: 100, right: 100, bottom: 100, left: 100},
+	width = Math.min(700, window.innerWidth - 10) - margin.left - margin.right,
+    height = Math.min(width, window.innerHeight - margin.top - margin.bottom - 20);
+    
+
+//////////////////////////////////////////////////////////////
+/////////Select HTML and Create Event Handlers////////////////
+/////////////////////////////////////////////////////////////
+
+// Select Player 1 filter button
+var button1 = d3.select("#filter-btn-1");
+
+// Select the Player 1 form id
+var form1 = d3.select("#form-1");
+
+// Create event handlers for Player 1 button and form 
+button1.on("click", runEnter);
+form1.on("submit", runEnter);
+
+// Complete the event handler function for the form
+function runEnter() {
+
+  // Prevent the page from refreshing
+  d3.event.preventDefault();
+  
+  // Select the input element for Player 1
+  var inputElement1 = d3.select("#player1name");
+
+  // Get the value property of the input element for Player 1
+  var inputValue1 = inputElement1.property("value");
+
+  // Select the input element for Player 1
+  var inputElement2 = d3.select("#player2name");
+
+  // Get the value property of the input element for Player 1
+  var inputValue2 = inputElement2.property("value");
+
+////////////////////////////////////////////////////////////// 
+////////////////////////// Data //////////////////////////////
+///////////////////Example Player//////////////////////////// 
+/////////////////////////////////////////////////////////////
+
+d3.json("https://api.sportsdata.io/v3/nba/stats/json/PlayerSeasonStats/2019?key=835f8a8af56d4eac98fdcd36de549b85", function(nbaStats) {
+    
+// Grab Data for Player 1 (Ex. Nene Hilario)
+
+   var filteredData1 = nbaStats.filter(stat => stat.Name === inputValue1);
+
+   var fieldgoals1 = filteredData1.map(stat => (stat.FieldGoalsPercentage/100).toFixed(2));
+   var twoPointers1 = filteredData1.map(stat => (stat.TwoPointersPercentage/100).toFixed(2));
+   var threePointers1 = filteredData1.map(stat => (stat.ThreePointersPercentage/100).toFixed(2));
+   var freeThrows1 = filteredData1.map(stat => (stat.FreeThrowsPercentage/100).toFixed(2));
+   var offensiveRebounds1 = filteredData1.map(stat => (stat.OffensiveReboundsPercentage/100).toFixed(2));
+   var defensiveRebounds1 = filteredData1.map(stat => (stat.DefensiveReboundsPercentage/100).toFixed(2));
+   var trueShooting1 = filteredData1.map(stat => (stat.TrueShootingPercentage/100).toFixed(2));
+   var assists1 = filteredData1.map(stat => (stat.AssistsPercentage/100).toFixed(2));
+
+   console.log(threePointers1)
+
+// Grab Data for Player 2: (Ex. Marcin Gortat)
+
+   //Filter Data
+   var filteredData2 = nbaStats.filter(stat => stat.Name === inputValue2);
+  
+   // Grab Radial Chart Data
+   var fieldgoals2 = filteredData2.map(stat => (stat.FieldGoalsPercentage/100).toFixed(2));
+   var twoPointers2 = filteredData2.map(stat => (stat.TwoPointersPercentage/100).toFixed(2));
+   var threePointers2 = filteredData2.map(stat => (stat.ThreePointersPercentage/100).toFixed(2));
+   var freeThrows2 = filteredData2.map(stat => (stat.FreeThrowsPercentage/100).toFixed(2));
+   var offensiveRebounds2 = filteredData2.map(stat => (stat.OffensiveReboundsPercentage/100).toFixed(2));
+   var defensiveRebounds2 = filteredData2.map(stat => (stat.DefensiveReboundsPercentage/100).toFixed(2));
+   var trueShooting2 = filteredData2.map(stat => (stat.TrueShootingPercentage/100).toFixed(2));
+   var assists2 = filteredData2.map(stat => (stat.AssistsPercentage/100).toFixed(2));
+
+   //Append to Radial Chart Output
+   var data = [   
+   	  [//Player 1
+   		{axis:"Field Goals Percentage",value:fieldgoals1},
+   		{axis:"Two Pointer Percentage",value:twoPointers1},
+   		{axis:"Three Pointer Percentage",value:threePointers1},
+   		{axis:"Free Throw Percentage",value:freeThrows1},
+   		{axis:"Offensive Rebound Percentage",value:offensiveRebounds1},
+   		{axis:"Defensive Rebound Percentage",value:defensiveRebounds1},
+   		{axis:"True Shooting Percentage",value:trueShooting1},
+   		{axis:"Assist Percentage",value:assists1}			
+   	  ],[//Player 2
+   		{axis:"Field Goals Percentage",value:fieldgoals2},
+   		{axis:"Two Pointer Percentage",value:twoPointers2},
+   		{axis:"Three Pointer Percentage",value:threePointers2},
+   		{axis:"Free Throw Percentage",value:freeThrows2},
+   		{axis:"Offensive Rebound Percentage",value:offensiveRebounds2},
+   		{axis:"Defensive Rebound Percentage",value:defensiveRebounds2},
+   		{axis:"True Shooting Percentage",value:trueShooting2},
+   		{axis:"Assist Percentage",value:assists2}	
+   	  ]
+      ];
+
+      //Grab Profile Data for Players 1 and 2
+      var playername1 = filteredData1.map(stat => (stat.Name));
+      var team1 = filteredData1.map(stat => (stat.Team));
+      var position1 = filteredData1.map(stat => (stat.Position));
+      var turnovers1 = filteredData1.map(stat => (stat.Turnovers));
+      var personalfouls1 = filteredData1.map(stat => (stat.PersonalFouls));
+      var points1 = filteredData1.map(stat => (stat.Points));
+
+      var playername2 = filteredData2.map(stat => (stat.Name));
+      var team2 = filteredData2.map(stat => (stat.Team));
+      var position2 = filteredData2.map(stat => (stat.Position));
+      var turnovers2 = filteredData2.map(stat => (stat.Turnovers));
+      var personalfouls2 = filteredData2.map(stat => (stat.PersonalFouls));
+      var points2 = filteredData2.map(stat => (stat.Points));
+
+      //Clear previous html
+      var addList1 = d3.select(".player-body");
+      addList1.html("");
+
+      var addList2 = d3.select(".player-body-2")
+      addList2.html("");
+
+      //Append data to both profiles
+      d3.select(".player-body")
+        .append("tr")
+        .text("Player Name: " + playername1)
+        .append("tr")
+        .text("Team: " + team1)
+        .append("tr")
+        .text("Position: " + position1)
+        .append("tr")
+        .text("Turnovers: " + turnovers1)
+        .append("tr")
+        .text("Personal Fouls: " + personalfouls1)
+        .append("tr")
+        .text("Total Points: " + points1)
+
+      //Add profile data to player 1
+      d3.select(".player-body-2")
+        .append("tr")
+        .text("Player Name: " + playername2)
+        .append("tr")
+        .text("Team: " + team2)
+        .append("tr")
+        .text("Position: " + position2)
+        .append("tr")
+        .text("Turnovers: " + turnovers2)
+        .append("tr")
+        .text("Personal Fouls: " + personalfouls2)
+        .append("tr")
+        .text("Total Points: " + points2)
+
+
+////////////////////////////////////////////////////////////// 
+//////////////////// Draw the Chart ////////////////////////// 
+/////////////////////////////////////////////////////////////
+
+var color = d3.scale.ordinal()
+	.range(["#CC333F","#00A0B0"]);
+	
+var radarChartOptions = {
+  w: width,
+  h: height,
+  margin: margin,
+  maxValue: 0.5,
+  levels: 5,
+  roundStrokes: true,
+  color: color
+};
+        
+        //Call function to draw the Radar chart
+        RadarChart(".radarChart", data, radarChartOptions);
+    });
+}; // Complete the event handler function for the form
+        
+        </script>
+    </div>
+
+<!-- Player 2 Filter -->
+    <div class="col-md-2">
+        <aside class="filters">
+          <div class="panel panel-default">
+            <div class="panel-heading-2">
+              <strong>Player 2</strong>
+            </div>
+            <div class="panel-body">
+              <form id="form-2">
+                <div class="form-group">
+                  <ul class="list-group" id="filters">
+                    <li class="filter list-group-item">
+                      <label for="date">Enter a Player Name</label>
+                      <input class="form-control" id="player2name" type="text" placeholder="Player 2">
+                    </li>
+                  </ul>
+                </div>
+              </form>
+            </div>
+          </div>
+          <div class="panel panel-default">
+            <div class="player-heading">
+              <strong>Profile</strong>
+              </div>
+            <div class="player-body-2">
+            </div>
+          </div>
+        </aside>
+      </div>
+
+    <!-- Javascript -->
+    <script src="js/radarChart.js"></script>
+    
+    </body>
+</html>
