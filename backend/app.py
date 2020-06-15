@@ -1,6 +1,6 @@
 from backend.sportsdata_client import SportsDataClient
-from sportsdata_repo import SportsDataRepository
-from sportsdata_service import SportsDataService
+from backend.sportsdata_repo import SportsDataRepository
+from backend.sportsdata_service import SportsDataService
 from flask import Flask, jsonify
 import os
 
