@@ -12,7 +12,11 @@ service = SportsDataService(
     SportsDataClient(api_key),
     SportsDataRepository(mongo_conn),
 )
-app = Flask(__name__)
+
+app = Flask(
+    __name__, 
+    static_path_url='', 
+    static_folder='../basketball-website/front_end/assets')
 
 @app.after_request # blueprint can also be app~~
 def after_request(response):
