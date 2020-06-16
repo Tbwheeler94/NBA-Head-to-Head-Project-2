@@ -25,13 +25,13 @@
 <!-- Nav Bar -->
 <nav style="background-color: #e2eef8;">
   <ul class= "navbar-nav">
-    <li><a href="#"><img src="css/images/ball2.jpg" alt="ball" width="20" height="20"/>NBA Player Comparison from the last 10 years</a></li>
-    <li><a href="#"><img src="css/images/ball2.jpg" alt="ball" width="20" height="20"/>Transform Scatter Plot Chart 2019</a></li>
-    <li><a href="#"><img src="css/images/ball2.jpg" alt="ball" width="20" height="20"/><span>Head to Head Radar Chart 2019</span></a></a></li>
+    <li><a href="shot-chart.html"><img src="css/images/ball2.jpg" alt="ball" width="20" height="20"/>Team Shot Chart 2019</a></li>
+    <li><a href="scatter-plot.html"><img src="css/images/ball2.jpg" alt="ball" width="20" height="20"/>Transform Scatter Plot Chart 2019</a></li>
+    <li><a href="radar-chart.html"><img src="css/images/ball2.jpg" alt="ball" width="20" height="20"/><span>Head to Head Radar Chart 2019</span></a></a></li>
   </ul>
   <div class="container-fluid" style = "text-align: center;">
     <div>    
-      <a class="navbar-brand" href="#"><img src="css/images/NBA_logo.png" alt="NBA" width="100" height="50" style="margin:40px -1230px;"></a>
+      <a class="navbar-brand" href="#"><img src="css/images/NBA_logo.png" alt="NBA" width="100" height="50" style="margin:40px -1150px;"></a>
     </div>
     <br>
     <h1>
@@ -129,9 +129,10 @@ function runEnter() {
 ////////////////////////////////////////////////////////////// 
 ////////////////////////// Data //////////////////////////////
 ///////////////////Example Player//////////////////////////// 
-/////////////////////////////////////////////////////////////
+///////////////////https://warm-gorge-24569.herokuapp.com/players/2020//////////////////////////////////////////
+//Old link: https://api.sportsdata.io/v3/nba/stats/json/PlayerSeasonStats/2019?key=835f8a8af56d4eac98fdcd36de549b85
 
-d3.json("https://api.sportsdata.io/v3/nba/stats/json/PlayerSeasonStats/2019?key=835f8a8af56d4eac98fdcd36de549b85", function(nbaStats) {
+d3.json("https://warm-gorge-24569.herokuapp.com/players/2019", function(nbaStats) {
     
 // Grab Data for Player 1 (Ex. Nene Hilario)
 
@@ -145,8 +146,6 @@ d3.json("https://api.sportsdata.io/v3/nba/stats/json/PlayerSeasonStats/2019?key=
    var defensiveRebounds1 = filteredData1.map(stat => (stat.DefensiveReboundsPercentage/100).toFixed(2));
    var trueShooting1 = filteredData1.map(stat => (stat.TrueShootingPercentage/100).toFixed(2));
    var assists1 = filteredData1.map(stat => (stat.AssistsPercentage/100).toFixed(2));
-
-   console.log(threePointers1)
 
 // Grab Data for Player 2: (Ex. Marcin Gortat)
 
