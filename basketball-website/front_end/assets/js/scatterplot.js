@@ -153,8 +153,8 @@ function tooltipUpdata(chosenXAxis, chosenYAxis, circlesGroup) {
     return circlesGroup;
 }
 
-// pulling data and mapping 
-d3.csv('./assets/data/result.csv').then(function(ballData) {
+// pulling data and mapping final\basketball-website\front_end\assets\data\result.csv
+d3.csv('./data/result.csv').then(function(ballData) {
 
     console.log(ballData);
     
