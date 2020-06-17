@@ -1,57 +1,82 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <title>NBA API</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-  <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <link rel="stylesheet" href="d3style.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <!-- D3.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.2.3/d3.min.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<link rel="stylesheet" href="css/d3style.css">
 </head>
 <body>
 
 <nav class="navbar navbar-light" style="background-color: #e2eef8;">
-  <div class="container-fluid text-center">
-    <div class="navbar-header">    
-      <a class="navbar-brand" href="#"><img src="NBA_logo.png" alt="NBA" width="100" height="50" style="vertical-align:middle;margin:40px 30px"></a>
-    </div>
-    <ul class="nav navbar-nav">
-      <li class="active"><a href="#"><img src="ball2.jpg" alt="ball" width="20" height="20"/>NBA Player Comparison from the last 10 years</a></li>
-      <li><a href="#"><img src="ball2.jpg" alt="ball" width="20" height="20"/>Transform Scatter Plot Chart 2019</a></li>
-      <li><a href="#"><img src="ball2.jpg" alt="ball" width="20" height="20"/><span>Radar Chart 2019</span></a></a></li>
-    </ul>
-    <br>
-    <h1>
-        Player verus Player Comparison
-        </h1>
+<div class="container-fluid text-center">
+  <div class="navbar-header">    
+    <a class="navbar-brand" href="#"><img src="css/Img/NBA_logo.png" alt="NBA" width="100" height="50" style="vertical-align:middle;margin:40px 30px"></a>
   </div>
+  <ul class="nav navbar-nav">
+    <li class="active"><a href="#"><img src="css/Img/ball2.jpg" alt="ball" width="20" height="20"/>NBA Player Comparison from the last 10 years</a></li>
+    <li><a href="#"><img src="css/Img/ball2.jpg" alt="ball" width="20" height="20"/>Transform Scatter Plot Chart 2019</a></li>
+    <li><a href="#"><img src="css/Img/ball2.jpg" alt="ball" width="20" height="20"/><span>Radar Chart 2019</span></a></a></li>
+  </ul>
+  <br>
+  <h1>Team Court Shooting Maps</h1>
+</div>
 </nav>
 
-<div class="row">
-  <div class="col-xs-12  col-md-9">
-    <div id="scatter">
-      <!-- We append our chart here. -->
-    </div>
+<select id="drop-down-id">
+	<option value="css/Img/ATL.jpg" class="center">ATL</option>
+    <option value="css/Img/BKN.jpg" class="center">BKN</option>
+    <option value="css/Img/BOS.jpg" class="center">BOS</option>
+    <option value="css/Img/CHA.jpg" class="center">CHA</option>
+    <option value="css/Img/CHI.jpg" class="center">CHI</option>
+    <option value="css/Img/CLE.jpg" class="center">CLE</option>
+    <option value="css/Img/DAL.jpg" class="center">DAL</option>
+    <option value="css/Img/DEN.jpg" class="center">DET</option>
+    <option value="css/Img/GSW.jpg" class="center">GSW</option>
+    <option value="css/Img/HOU.jpg" class="center">HOU</option>
+    <option value="css/Img/IND.jpg" class="center">IND</option>
+    <option value="css/Img/LAC.jpg" class="center">LAC</option>
+    <option value="css/Img/LAL.jpg" class="center">LAL</option>
+    <option value="css/Img/MEM.jpg" class="center">MEM</option>
+    <option value="css/Img/MIA.jpg" class="center">MIA</option>
+    <option value="css/Img/MIL.jpg" class="center">MIL</option>
+    <option value="css/Img/MIN.jpg" class="center">MIN</option>
+    <option value="css/Img/NOP.jpg" class="center">NOP</option>
+    <option value="css/Img/NYK.jpg" class="center">NYK</option>
+    <option value="css/Img/OKC.jpg" class="center">OKC</option>
+    <option value="css/Img/ORL.jpg" class="center">ORL</option>
+    <option value="css/Img/PHI.jpg" class="center">PHI</option>
+    <option value="css/Img/PHX.jpg" class="center">PHX</option>
+    <option value="css/Img/POR.jpg" class="center">POR</option>
+    <option value="css/Img/SAC.jpg" class="center">SAC</option>
+    <option value="css/Img/SAS.jpg" class="center">SAS</option>
+    <option value="css/Img/TOR.jpg" class="center">TOR</option>
+    <option value="css/Img/UTA.jpg" class="center">UTA</option>
+    <option value="css/Img/WAS.jpg" class="center">WAS</option>
+
+</select>
+<img id="image-id" src="css/Img/ATL.jpg" class="center"/>
+<script>
+    d3.select('#drop-down-id').on('change', function() {
+	  const imageUrl = d3.select(this).property('value');
+	  d3.select('#image-id')
+	    .property('src',imageUrl);
+    });
+</script>
 
 
-
-</div>
-<footer>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.5.0/d3.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-tip/0.9.1/d3-tip.js"></script>
-    <script script type="text/javascript" src="app.js"></script>
-
-
-  </footer>
-
-  
-
-</body>
+    </body>
 
 </html>
